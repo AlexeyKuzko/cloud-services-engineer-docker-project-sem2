@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.17-alpine AS builder
+FROM golang:1.22-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache git
@@ -20,7 +20,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/api
 
 # Final stage
-FROM alpine:3.14
+FROM alpine:3.19
 
 # Install security updates and ca-certificates
 RUN apk add --no-cache ca-certificates tzdata && \
