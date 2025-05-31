@@ -1,5 +1,5 @@
 # Build stage
-FROM node:16-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -17,10 +17,11 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM nginx:1.25-alpine
 
-# Install security updates
+# Install security updates and required packages
 RUN apk add --no-cache tzdata && \
+    apk upgrade --no-cache && \
     rm -rf /var/cache/apk/*
 
 # Copy nginx configuration
