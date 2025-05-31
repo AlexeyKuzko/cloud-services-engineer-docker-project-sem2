@@ -4,6 +4,9 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /app
 
+# Set Node options for legacy OpenSSL provider
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 # Copy package files
 COPY package*.json ./
 
