@@ -1,6 +1,6 @@
 # Docker Project
 
-This project demonstrates containerization of a full-stack application using Docker and Docker Compose, with a focus on security and best practices.
+This project demonstrates containerization of a full-stack application using Docker and Docker Compose, with a focus on security and best practices. The application is automatically built and deployed using GitHub Actions.
 
 ## Architecture
 
@@ -22,59 +22,39 @@ The application consists of two main components:
 
 ## Prerequisites
 
-- Docker Engine 20.10.0+
-- Docker Compose 2.0.0+
+- GitHub repository with access to GitHub Actions
+- Docker Hub account for storing images
+- GitHub repository secrets configured:
+  - `DOCKER_USER`: Docker Hub username
+  - `DOCKER_PASSWORD`: Docker Hub access token
 
-## Setup
+## Deployment
 
-1. Create secrets directory and environment files:
-```bash
-mkdir -p secrets
-touch secrets/frontend.env secrets/backend.env
-```
+The application is automatically deployed using GitHub Actions workflow. The workflow:
+1. Runs security scanning with Trivy
+2. Builds Docker images for frontend and backend
+3. Pushes images to Docker Hub
+4. Deploys the application using Docker Compose
 
-2. Add necessary environment variables to the .env files
+### GitHub Actions Workflow
 
-3. Build and start the services:
-```bash
-docker-compose up --build
-```
+The workflow is triggered on push to the main branch and includes:
+- Security scanning of Docker images
+- Building and pushing images to Docker Hub
+- Deployment using Docker Compose
 
 ## Image Sizes
 
 - Frontend: ~20MB (nginx:alpine base)
 - Backend: ~15MB (alpine base)
 
-## Development
-
-For development, you can use the following commands:
-
-```bash
-# Build images
-docker-compose build
-
-# Start services
-docker-compose up
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-```
-
 ## Security Scanning
 
-The project includes Trivy vulnerability scanning in the CI/CD pipeline. To run it locally:
-
-```bash
-# Install Trivy
-brew install aquasecurity/trivy/trivy
-
-# Scan images
-trivy image frontend:latest
-trivy image backend:latest
-```
+The project includes automated vulnerability scanning in the CI/CD pipeline using Trivy. The scanning:
+- Runs automatically on each push to main branch
+- Checks for critical and high severity vulnerabilities
+- Fails the build if vulnerabilities are found
+- Generates a detailed report of any issues
 
 ## Resource Limits
 
@@ -100,3 +80,18 @@ Both services include health checks that run every 30 seconds:
 ## Networks
 
 - `app-network`: Isolated bridge network for service communication
+
+## Monitoring
+
+The deployment status and logs can be monitored through:
+1. GitHub Actions tab in your repository
+2. Docker Hub repository for image builds
+3. Application health endpoints
+
+## Troubleshooting
+
+If the deployment fails:
+1. Check GitHub Actions logs for detailed error messages
+2. Verify Docker Hub credentials in repository secrets
+3. Ensure all required environment variables are set
+4. Check application logs for runtime issues
